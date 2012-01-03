@@ -1,0 +1,1 @@
+wincron.vbs will try to run all the executables it finds this folder, in alphabetic sequence.
