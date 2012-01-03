@@ -1,0 +1,63 @@
+===========
+WinCron.Vbs 
+===========
+For windows 2000, 2003, 2008 (32/64 bit)
+Originally built some time in 2003
+By Dale C. Anderson 
+http://www.DaleAnderson.ca
+
+
+Summary
+-------
+Wincron.vbs attempts to execute everything it finds inside the "run-once-pending" And "recurring" subfolders. This includes native executables (.BAT, .EXE, .CMD), And .VBS or .JS files. VBS/JS files will be automatically prefixed with CSCRIPT.EXE at runtime. 
+
+This script is NOT meant to emulate Unix CRON at all.  It was only purpose-built for my own needs; namely to execute a handful of files on a routine basis. The name 'cron' just was in the same ballpark, so that's what I used.
+
+
+Security Warning
+--------
+Make sure that the only people with write access to the wincron folders are administrators. Since wincron.vbs blindly tries to execute, this could be a gaping security risk if anyone is allowed to drop a file in to one of these folders.
+
+
+Caveats
+-------
+1) Beware of verbose executables - sometimes the invisble screen buffer can fill up, causing the wincron.vbs to hang. Make sure your executables & batch files are as quiet as possible. 
+
+2) Executables are launched in alphabetic sequence.
+
+3) Each file being executed is waited on until it is complete. There is currently no "timeout" on execution, so if your executable hangs, so will wincron.vbs.
+
+4) All files that reside in these folders waiting to be executed by this script must be able to be run at the command prompt. GUI programs will just cause wincron.vbs to hang. 
+
+5) Each of the files found In the "run-once-pending" subfolder will be moved to the "run-once-finished" folder after it has been executed, regardless of the result of its execution. In other words, make sure it works before you depend on this script to run it.
+
+
+
+Dependencies
+------------
+- Windows Script host (obviously). Every windows version since 2003 has this built in. 
+
+- W3 Jmail from Dimac, which is a free COM component. Windows did / does have a built in COM handler (CDOSYS or CDONTS), and at some point I might change the script to use the built in one,  but at the time I wrote this, JMail was already on the server, and it was much simpler to use, so that's where it's at. 
+
+
+Configuration
+-------------
+Open up wincron.vbs in a text editor, and adjust your mail server settings.  Wincron.vbs will try to notify you if a program exits abnormally. 
+
+Then proceed to setting up a scheduled task (see Usage).
+
+
+Usage
+-----
+Set wincron.vbs up to run at the interval of your choice In the Windows Task Scheduler (daily, hourly, etc). Make sure the account that will be running the script has administrator privileges if necessary.
+
+If you want to set up tasks to run at daily AND hourly, then duplicate the wincron.vbs folder, and set up two separate scheduled tasks. 
+    
+Note that this script cannot be run with WScript.exe - it must be run with CScript.exe. 
+   
+Example Task Scheduler Item Details: 
+     Run:        %windir%\system32\cscript.exe C:\path\to\script\WinCron.vbs
+     Start In:   C:\path\to\script\
+     Run As:     MACHINENAME\localaccount
+
+
