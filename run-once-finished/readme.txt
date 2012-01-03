@@ -1,0 +1,1 @@
+wincron.vbs will store all of the files here that it found and executed in "run-once-pending".
